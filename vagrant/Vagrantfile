@@ -1,0 +1,16 @@
+
+Vagrant.configure(2) do |config|
+    config.vm.box = "debian/bookworm64"
+    config.vm.provider "hyperv"
+  
+    config.vm.network "private_network", ip: "192.168.200.10", auto_config: false
+  
+    config.vm.synced_folder ".", "/home/vagrant/sync"
+    config.vm.provider "hyperv" do |vb|
+        vb.memory = "2048"
+        vb.cpus = "2"
+        vb.vmname = "HyperV-Vagrant-Debian-Jenkins"
+    end
+  end
+  
+  
