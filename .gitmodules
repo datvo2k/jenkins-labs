@@ -1,0 +1,3 @@
+[submodule "hyper-v/hyperv-vm-provisioning"]
+	path = hyper-v/hyperv-vm-provisioning
+	url = https://github.com/schtritoff/hyperv-vm-provisioning.git
