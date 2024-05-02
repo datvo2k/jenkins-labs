@@ -1,3 +1,6 @@
 [submodule "hyper-v/hyperv-vm-provisioning"]
 	path = hyper-v/hyperv-vm-provisioning
 	url = https://github.com/schtritoff/hyperv-vm-provisioning.git
+[submodule "hyper-v/Hyper-V-Automation"]
+	path = hyper-v/Hyper-V-Automation
+	url = https://github.com/fdcastel/Hyper-V-Automation.git
