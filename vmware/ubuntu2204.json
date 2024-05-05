@@ -1,0 +1,43 @@
+{
+  "_comment": "Build with `packer build ubuntu2204.json`",
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "version": 17,
+      "vm_name": "ubuntu2204",
+      "guest_os_type": "ubuntu-64",
+      "headless": false,
+
+      "iso_url": "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso",
+      "iso_checksum": "sha256:45f873de9f8cb637345d6e66a583762730bbea30277ef7b32c9c3bd6700a32b2",
+
+      "disk_size": "40960",
+      "disk_additional_size": "40960",
+      "disk_type_id": "0",
+
+      "cpus": 2,
+      "memory": 4096,
+
+      "communicator": "ssh",
+      "ssh_password": "ubuntu",
+      "ssh_username": "ubuntu",
+      "ssh_timeout": "20m",
+      "ssh_handshake_attempts": 100000,
+
+      "boot_wait": "10s",
+      "http_directory": "http",
+
+      "boot_command": [
+        "<enter><enter><f6><esc><wait> ",
+        "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/",
+        "<enter>"
+      ],
+      "provisioners": [
+        {
+          "type": "shell",
+          "inline": ["ls /"]
+        }
+      ]
+    }
+  ]
+}
