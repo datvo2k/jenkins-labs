@@ -1,20 +1,7 @@
 #cloud-config
 autoinstall:
   version: 1
-  early-commands:
-    - systemctl stop ssh
-  identity:
-    hostname: ubuntu-server
-    password: "$6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1"
-    username: ubuntu
-  network:
-    network:
-      version: 2
-      ethernets:
-        ens33:
-          dhcp4: true
-          dhcp-identifier: mac
-  locale: en_US.UTF-8
+  locale: en_US
   keyboard:
     layout: us
   ssh:
@@ -25,5 +12,24 @@ autoinstall:
       name: direct
     swap:
       size: 0
+  user-data:
+    package_upgrade: true
+    timezone: Asia/Ho_Chi_Minh
+    users:
+      - name: ubuntu
+        passwd: $6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1
+        groups: [adm, cdrom, dip, plugdev, lxd, sudo]
+        lock-passwd: false
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        shell: /bin/bash
   late-commands:
-    - sed -i 's/^#*\(send dhcp-client-identifier\).*$/\1 = hardware;/' /target/etc/dhcp/dhclient.conf
+    # Changing from networkd to NetworkManager
+    # move existing config out of the way
+    - find /target/etc/netplan/ -name "*.yaml" -exec sh -c 'mv "$1" "$1-orig"' _ {} \;
+    # Create a new netplan and enable it
+    - |
+      cat <<EOF | sudo tee /target/etc/netplan/01-netcfg.yaml
+      network:
+        version: 2
+        renderer: NetworkManager
+      EOF

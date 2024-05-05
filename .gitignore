@@ -34,4 +34,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 vm_storages.txt
-*/packer_cache
+packer_cache
