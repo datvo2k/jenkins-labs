@@ -4,6 +4,12 @@ autoinstall:
   locale: en_US
   keyboard:
     layout: us
+  network:
+    network:
+      version: 2
+      ethernets:
+        ens192:
+          dhcp4: true
   ssh:
     install-server: true
     allow-pw: true
@@ -22,14 +28,3 @@ autoinstall:
         lock-passwd: false
         sudo: ALL=(ALL) NOPASSWD:ALL
         shell: /bin/bash
-  late-commands:
-    # Changing from networkd to NetworkManager
-    # move existing config out of the way
-    - find /target/etc/netplan/ -name "*.yaml" -exec sh -c 'mv "$1" "$1-orig"' _ {} \;
-    # Create a new netplan and enable it
-    - |
-      cat <<EOF | sudo tee /target/etc/netplan/01-netcfg.yaml
-      network:
-        version: 2
-        renderer: NetworkManager
-      EOF

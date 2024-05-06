@@ -1,0 +1,57 @@
+{
+  "variables": {
+    "vm_name": "debian-12.5.0-amd64",
+    "vm_cpus": "2",
+    "vm_memory": "4096",
+    "disk_size": "8000",
+    "iso_url": "https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-cd/debian-12.5.0-amd64-netinst.iso",
+    "iso_checksum": "sha256:013f5b44670d81280b5b1bc02455842b250df2f0c6763398feb69af1a805a14f",
+    "ssh_username": "packer",
+    "ssh_password": "packer",
+    "boot_wait": "10s"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "install <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US <wait>",
+        "auto=true <wait>",
+        "net.ifnames=0 <wait>",
+        "biosdevname=0 <wait>",
+        "locale=en_US <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "netcfg/choose_interface=eth0 <wait>",
+        "netcfg/get_hostname={{ user `hostname` }} <wait>",
+        "netcfg/get_domain=vmware.lab <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "{{ user `boot_wait` }}",
+      "disk_size": "{{ user `disk_size` }}",
+      "disk_type_id": "0",
+      "guest_os_type": "debian12-64",
+      "headless": false,
+      "http_directory": "http",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "shutdown_command": "echo 'packer'|sudo -S shutdown -P now",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_port": 22,
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_timeout": "30m",
+      "vm_name": "{{ user `vm_name` }}",
+      "cpus": "{{ user `vm_cpus` }}",
+      "memory": "{{ user `vm_memory` }}",
+      "version": 14
+    }
+  ]
+}
