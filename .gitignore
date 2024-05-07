@@ -35,3 +35,4 @@ override.tf.json
 terraform.rc
 vm_storages.txt
 packer_cache
+.vagrant
