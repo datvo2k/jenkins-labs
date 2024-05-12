@@ -369,7 +369,7 @@ function script_init() {
         if [[ -f "$configFile" ]]; then
             installPackages
             secure_system
-            secure_ssh
+            # secure_ssh
             secure_firewall
             secure_fail2ban
             secure_updates
