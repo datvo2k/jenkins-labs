@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Declare Paths & Settings.
+SYS_PATH="/etc/sysctl.conf"
+PROF_PATH="/etc/profile"
+SSH_PORT=""
+SSH_PATH="/etc/ssh/sshd_config"
+
 # Green, Yellow & Red Messages.
 green_msg() {
     tput setaf 2
@@ -18,12 +24,6 @@ red_msg() {
     echo "[*] ----- $1"
     tput sgr0
 }
-
-# Declare Paths & Settings.
-SYS_PATH="/etc/sysctl.conf"
-PROF_PATH="/etc/profile"
-SSH_PORT=""
-SSH_PATH="/etc/ssh/sshd_config"
 
 # Root
 check_if_running_as_root() {
@@ -102,27 +102,14 @@ enable_packages() {
 # Set the server TimeZone to the VPS IP address location.
 set_timezone() {
     echo
-    yellow_msg 'Setting TimeZone based on IP address...'
+    yellow_msg 'Setting TimeZone based on VPS IP address...'
     sleep 0.5
 
-    public_ip=$(curl -s ipinfo.io/ip)
-
-    if [[ $? -eq 0 ]]; then
-        location=$(curl -s ipinfo.io/$public_ip/city)
-        timezone=$(curl -s ipinfo.io/$public_ip/timezone)
-
-        echo
-        yellow_msg "Your location is $location"
-        green_msg "Timezone set to $timezone"
-
-        date_time=$(date --date="TZ=\"$timezone\"" "+%Y-%m-%d %H:%M:%S")
-        green_msg "The current date and time in your timezone is $date_time"
-    else
-        red_msg "Failed to fetch public IP address"
-    fi
-
-    echo
-    sleep 0.5
+    sudo timedatectl set-ntp true
+    sudo systemctl restart systemd-timesyncd
+    sudo timedatectl set-timezone Asia/Ho_Chi_Minh
+    
+    green_msg "Timezone set to Asia/Ho_Chi_Minh"
 }
 
 # Fix DNS Temporarly
@@ -533,6 +520,32 @@ ufw_optimizations() {
     sleep 0.5
 }
 
+kernel_hardening() {
+    echo
+    yellow_msg 'Modify the Kernel... (This can take a while.)'
+    echo
+    sleep 0.5
+
+    echo 'fs.suid_dumpable = 0' >/etc/sysctl.d/50-kernel-restrict.conf 2>/dev/null
+    echo "kernel.randomize_va_space = 2" >/etc/sysctl.d/50-rand-va-space.conf 2>/dev/null
+    echo "dev.tty.ldisc_autoload = 0" >/etc/sysctl.d/50-ldisc-autoload.conf 2>/dev/null
+    echo "fs.protected_fifos = 2" >/etc/sysctl.d/50-protected-fifos.conf 2>/dev/null
+    echo "kernel.core_uses_pid = 1" >/etc/sysctl.d/50-core-uses-pid.conf 2>/dev/null
+    echo "kernel.sysrq = 0" >/etc/sysctl.d/50-sysrq.conf 2>/dev/null
+    echo "kernel.unprivileged_bpf_disabled = 1" >/etc/sysctl.d/50-unprivileged-bpf.conf 2>/dev/null
+    echo "kernel.yama.ptrace_scope = 1" >/etc/sysctl.d/50-ptrace-scope.conf 2>/dev/null
+    echo "net.core.bpf_jit_harden = 2" >/etc/sysctl.d/50-bpf-jit-harden.conf 2>/dev/null
+
+    echo
+    green_msg 'Kernel hardening has done.'
+    echo
+    sleep 0.5
+}
+
+remove_telnet() {
+    sudo apt-get -y --purge remove telnet nis ntpdate >/dev/null 2>&1
+}
+
 main() {
     complete_update
     sleep 0.5
@@ -549,9 +562,6 @@ main() {
     fix_dns
     sleep 0.5
 
-    enable_ipv6_support
-    sleep 0.5
-
     remove_old_ssh_conf
     sleep 0.5
 
@@ -563,6 +573,11 @@ main() {
 
     ufw_optimizations
     sleep 0.5
+
+    kernel_hardening
+    sleep 0.5
+
+    reboot
 }
 
 main
