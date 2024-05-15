@@ -14,4 +14,5 @@ Vagrant.configure("2") do |config|
     #     s.path = "./scripts/_common/firewall.sh"
     # end
     config.vm.provision :shell, privileged: true, path: "./scripts/debian/optimizer.sh"
+    config.vm.provision :shell, privileged: true, path: "./scripts/devops/docker.sh"
 end

@@ -546,23 +546,25 @@ main() {
     set_timezone
     sleep 0.5
 
-    fix_dns
-    sleep 0.5
+    # fix_dns
+    # sleep 0.5
 
-    enable_ipv6_support
-    sleep 0.5
+    # remove_old_ssh_conf
+    # sleep 0.5
 
-    remove_old_ssh_conf
-    sleep 0.5
+    # update_ssh_config
+    # sleep 0.5
 
-    update_ssh_config
-    sleep 0.5
+    # sysctl_optimizations
+    # sleep 0.5
 
-    sysctl_optimizations
-    sleep 0.5
+    # ufw_optimizations
+    # sleep 0.5
 
-    ufw_optimizations
-    sleep 0.5
+    # kernel_hardening
+    # sleep 0.5
+
+    reboot
 }
 
 main
