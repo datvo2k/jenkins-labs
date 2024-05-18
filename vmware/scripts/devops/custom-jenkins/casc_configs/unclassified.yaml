@@ -1,0 +1,5 @@
+# unclassified.yaml
+unclassified:
+  location:
+    adminAddress: sample@gmail.com
+    url: http://localhost:8080
