@@ -398,6 +398,12 @@ controller:
     - git:5.2.2
     - configuration-as-code:1810.v9b_c30a_249a_4c
     - github:1.39.0
+    - matrix-project:latest
+    - http_request:latest
+    - credentials:latest 
+    - pipeline-utility-steps:latest
+    - docker-workflow:latest
+    - command-launcher:latest
 
   # If set to false, Jenkins will download the minimum required version of all dependencies.
   # -- Download the minimum required version or latest version of all dependencies
@@ -679,12 +685,14 @@ controller:
     # -- Ingress labels
     labels: {}
     # -- Ingress annotations
-    annotations: {}
+    annotations: 
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
     # ingressClassName: nginx
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: "letsencrypt-jenkins"
 
     # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
     # -- Ingress path
@@ -692,14 +700,17 @@ controller:
 
     # configures the hostname e.g. jenkins.example.com
     # -- Ingress hostname
-    hostName:
+    hostName: jenkins.local
     # -- Hostname to serve assets from
     resourceRootUrl:
     # -- Ingress TLS configuration
-    tls: []
+    tls:
     # - secretName: jenkins.cluster.local
     #   hosts:
     #     - jenkins.cluster.local
+      - secretName: jenkins.local
+        hosts:
+          - jenkins.local
 
   # often you want to have your controller all locked down and private,
   # but you still want to get webhooks from your SCM
@@ -882,7 +893,7 @@ controller:
 
 agent:
   # -- Enable Kubernetes plugin jnlp-agent podTemplate
-  enabled: true
+  enabled: false
   # -- The name of the pod template to use for providing default values
   defaultsProviderTemplate: ""
 

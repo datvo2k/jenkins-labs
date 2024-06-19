@@ -4,3 +4,6 @@
 [submodule "hyper-v/Hyper-V-Automation"]
 	path = hyper-v/Hyper-V-Automation
 	url = https://github.com/fdcastel/Hyper-V-Automation.git
+[submodule "kubernetes/cert/Minikube-and-LetsEncrypt"]
+	path = kubernetes/cert/Minikube-and-LetsEncrypt
+	url = https://github.com/klaushofrichter/Minikube-and-LetsEncrypt.git
