@@ -664,7 +664,7 @@ controller:
 
   ingress:
     # -- Enables ingress
-    enabled: true
+    enabled: false
 
     # Override for the default paths that map requests to the backend
     # -- Override for the default Ingress paths
