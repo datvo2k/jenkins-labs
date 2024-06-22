@@ -1,0 +1,9 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/dcermak/vscode-rke-cluster-config/main/schemas/cluster.yml.json": [
+            "cluster.yml",
+            "cluster.yaml"
+        ],
+        "kubernetes://schema/apps/v1@deployment": "file:///home/datvo/dev/jenkins-labs/kubernetes/nginx-demo.yaml"
+    }
+}
