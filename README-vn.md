@@ -44,5 +44,6 @@ helm install jenkins -n jenkins -f jenkins-values.yaml $chart
 Cài đặt netdata
 helm repo add netdata https://netdata.github.io/helmchart/
 helm install netdata netdata/netdata -n netdata -f netdata-values.yaml
+helm upgrade netdata netdata/netdata -n netdata -f netdata-values.yaml
 ```
 
