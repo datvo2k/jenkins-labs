@@ -47,3 +47,20 @@ helm install netdata netdata/netdata -n netdata -f netdata-values.yaml
 helm upgrade netdata netdata/netdata -n netdata -f netdata-values.yaml
 ```
 
+CI phases
+
+```
+Pre-Deployment checks
+    Code Stability
+    Code Quality
+    Unit Testing, Code Coverage, Security Testing
+Intermediate Operations
+    Artifact Management in Continuous Integration.
+    DB versioning while making database-related changes
+Post Deployment checks
+    Smoke Testing
+    Regression Testing
+    API Testing
+Notifications
+Branching Strategy
+```
