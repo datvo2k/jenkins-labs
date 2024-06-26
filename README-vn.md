@@ -45,6 +45,10 @@ Cài đặt netdata
 helm repo add netdata https://netdata.github.io/helmchart/
 helm install netdata netdata/netdata -n netdata -f netdata-values.yaml
 helm upgrade netdata netdata/netdata -n netdata -f netdata-values.yaml
+
+Cài đặt trivy
+helm repo add aqua https://aquasecurity.github.io/helm-charts/
+helm repo update
 ```
 
 CI phases
