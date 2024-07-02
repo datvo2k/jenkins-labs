@@ -68,3 +68,5 @@ Post Deployment checks
 Notifications
 Branching Strategy
 ```
+
+Thực thi trên Docker-compose
