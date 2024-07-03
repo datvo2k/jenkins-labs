@@ -15,8 +15,11 @@ pipeline {
 
         stage('Prepare') {
             steps {
-                echo 'Installing required packages...'
-                sh 'venv/bin/python -m pip install -r requirements.txt'
+                withEnv(["HOME=${env.WORKSPACE}"]) {
+                    echo 'Installing required packages...'
+                    sh '/usr/local/bin/python -m pip install --upgrade pip'
+                    sh 'pip install -r requirements.txt --user'
+                }
             }
         }
 

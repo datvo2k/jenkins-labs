@@ -78,7 +78,7 @@ controller:
     username: "admin"
     # -- Admin password created as a secret if `controller.admin.createSecret` is true
     # @default -- <random password>
-    password: admin123@Password
+    password: admin
 
     # -- The key in the existing admin secret containing the username
     userKey: jenkins-admin-user
@@ -1141,7 +1141,7 @@ agent:
        serviceAccount: jenkins
        containers:
          - name: python
-           image: python:3.12
+           image: python:3.12-alpine3.20
            command: "/bin/sh -c"
            args: "cat"
            ttyEnabled: true
@@ -1153,25 +1153,17 @@ agent:
 
 # Inherits all values from `agent` so you only need to specify values which differ
 # -- Configure additional
-additionalAgents:
-#  maven:
-#    podName: maven
-#    customJenkinsLabels: maven
-#    # An example of overriding the jnlp container
-#    # sideContainerName: jnlp
+additionalAgents: {}
+#  python:
+#    podName: python
+#    customJenkinsLabels: python
+#    sideContainerName: python
 #    image:
-#      repository: jenkins/jnlp-agent-maven
-#      tag: latest
- python:
-   podName: python
-   customJenkinsLabels: python
-   sideContainerName: python
-   image:
-     repository: python
-     tag: "3.12"
-   command: "/bin/sh -c"
-   args: "cat"
-   TTYEnabled: true
+#      repository: python
+#      tag: "3.12-alpine3.20"
+#    command: "/bin/sh -c"
+#    args: "cat"
+#    TTYEnabled: true
 
 # Here you can add additional clouds
 # They inherit all values from the default cloud (including the main agent), so
