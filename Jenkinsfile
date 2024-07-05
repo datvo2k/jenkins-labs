@@ -1,41 +1,42 @@
 pipeline {
     agent {
-        node {
-            label 'jenkins-python'
-        }
+        kubernetes { label 'python' }
     }
-    
     stages {
         stage('Checkout') {
             steps {
-                echo 'Code checkout.'
-                git branch: 'main', url: 'https://github.com/datvo2k/flask-demo-devops.git'
+                container('python') {
+                    echo 'Code checkout.'
+                    git branch: 'main', url: 'https://github.com/datvo2k/flask-demo-devops.git'
+                }
             }
         }
 
         stage('Prepare') {
             steps {
-                withEnv(["HOME=${env.WORKSPACE}"]) {
+                container('python') {
                     echo 'Installing required packages...'
-                    sh '/usr/local/bin/python -m pip install --upgrade pip'
-                    sh 'pip install -r requirements.txt --user'
+                    sh 'pip3 install -r requirements.txt'
                 }
             }
         }
 
         stage('Unit Tests') {
-            steps {             
-                echo 'Running tests...'
-                sh 'nosetests -v test'
+            steps {
+                container('python') {
+                    echo 'Running tests...'
+                    sh 'nosetests -v test'
+                }
             }
         }
 
         stage('Integration tests') {
             steps {
-                echo "execute integration tests"
-                sh "nosetests -v int_test"
+                container('python') {
+                    echo 'Executing integration tests...'
+                    sh 'nosetests -v int_test'
+                }
             }
         }
-
     }
 }
