@@ -36,3 +36,6 @@ terraform.rc
 vm_storages.txt
 packer_cache
 .vagrant
+
+hyper-v
+vmware
