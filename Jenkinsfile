@@ -38,5 +38,11 @@ pipeline {
                 }
             }
         }
+
+        stage('Static Code Analysis') {
+            environment {
+                SONAR_URL = 'http://54.212.5.74:9000'
+            }
+        }
     }
 }

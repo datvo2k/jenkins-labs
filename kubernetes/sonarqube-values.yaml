@@ -501,7 +501,7 @@ postgresql:
   persistence:
     enabled: true
     accessMode: ReadWriteOnce
-    size: 20Gi
+    size: 10Gi
     storageClass:
   securityContext:
     # For standard Kubernetes deployment, set enabled=true

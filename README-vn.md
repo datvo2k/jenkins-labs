@@ -49,6 +49,11 @@ helm upgrade netdata netdata/netdata -n netdata -f netdata-values.yaml
 Cài đặt trivy
 helm repo add aqua https://aquasecurity.github.io/helm-charts/
 helm repo update
+
+Cài đặt SonarQube
+helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
+helm repo update
+helm install sonarqube sonarqube/sonarqube -n jenkins -f sonarqube-values.yaml
 ```
 
 CI phases
