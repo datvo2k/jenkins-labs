@@ -2,6 +2,9 @@ pipeline {
     agent {
         kubernetes { label 'python' }
     }
+    environment {
+                SCANNER_HOME = tool 'sonarscanner'
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -39,17 +42,30 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
-            environment {
-                SONAR_URL = 'http://54.212.5.74:9000'
-            }
+        stage('SonarQube Code Analysis') {
             steps {
-                container('python') {
-                    script {
-                        scannerHome = tool 'SonarQube'
+                container("python") {
+                    withSonarQubeEnv("sonarserver") {
+                        sh """
+                            ${SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=jenkins-python \
+                            -Dsonar.sources=."""
                     }
-                    withSonarQubeEnv('<sonarqubeInstallation>') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                container("python"){
+                    timeout(time: 1, unit: 'HOURS') {
+                        script {
+                            def qg = waitForQualityGate()
+                            if (qg.status != 'OK') {
+                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                            }
+                            echo 'Quality Gate Passed'
+                        }
                     }
                 }
             }
