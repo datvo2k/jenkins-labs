@@ -43,6 +43,16 @@ pipeline {
             environment {
                 SONAR_URL = 'http://54.212.5.74:9000'
             }
+            steps {
+                container('python') {
+                    script {
+                        scannerHome = tool 'SonarQube'
+                    }
+                    withSonarQubeEnv('<sonarqubeInstallation>') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
         }
     }
 }
