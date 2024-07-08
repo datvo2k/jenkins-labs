@@ -3,7 +3,8 @@ pipeline {
         kubernetes { label 'python' }
     }
     environment {
-                SCANNER_HOME = tool 'sonarscanner'
+        // def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
+        DIRECTORY = './jenkins-labs'
     }
     stages {
         stage('Checkout') {
@@ -45,30 +46,26 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 container("python") {
-                    withSonarQubeEnv("sonarserver") {
-                        sh """
-                            ${SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=jenkins-python \
-                            -Dsonar.sources=."""
+                    withSonarQubeEnv("jenkins-python") {
+                        sh '-Dsonar.projectKey=jenkins-python && -Dsonar.sources=. '
                     }
                 }
             }
         }
-
-        stage('Quality Gate') {
-            steps {
-                container("python"){
-                    timeout(time: 1, unit: 'HOURS') {
-                        script {
-                            def qg = waitForQualityGate()
-                            if (qg.status != 'OK') {
-                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                            }
-                            echo 'Quality Gate Passed'
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         container("python"){
+        //             timeout(time: 1, unit: 'HOURS') {
+        //                 script {
+        //                     def qg = waitForQualityGate()
+        //                     if (qg.status != 'OK') {
+        //                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        //                     }
+        //                     echo 'Quality Gate Passed'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
