@@ -39,7 +39,7 @@ Thực thi jenkins
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
 chart=jenkinsci/jenkins
-helm install jenkins -n jenkins -f jenkins-values.yaml $chart
+helm install jenkins -n jenkins -f jenkins-values.yaml jenkinsci/jenkins
 
 Cài đặt netdata
 helm repo add netdata https://netdata.github.io/helmchart/
