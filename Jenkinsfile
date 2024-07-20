@@ -5,6 +5,8 @@ pipeline {
     environment {
         // def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
         DIRECTORY = './jenkins-labs'
+        DOCKERHUB_CREDENTIALS = credentials('your-docker-credentials')
+        APP_NAME = "brianvo/flaskdemodevops"
     }
     stages {
         stage('Checkout') {
@@ -43,25 +45,14 @@ pipeline {
             }
         }
 
-        stage('SonarQube Code Analysis') {
-            steps {
-                container("python") {
-                    withSonarQubeEnv("jenkins-python") {
-                        sh '-Dsonar.projectKey=jenkins-python && -Dsonar.sources=. '
-                    }
-                }
-            }
-        }
-        // stage('Quality Gate') {
+        // stage('SonarQube Code Analysis') {
         //     steps {
-        //         container("python"){
-        //             timeout(time: 1, unit: 'HOURS') {
-        //                 script {
-        //                     def qg = waitForQualityGate()
-        //                     if (qg.status != 'OK') {
-        //                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
-        //                     }
-        //                     echo 'Quality Gate Passed'
+        //         container('python') {
+        //             script {
+        //                 withSonarQubeEnv('SonarQube-server') {
+        //                     def sonarqubeScannerHome = tool 'SonarQube-Scanner-1'
+        //                     sh "echo $pwd"
+        //                     sh "${sonarqubeScannerHome}/bin/sonar-scanner"
         //                 }
         //             }
         //         }

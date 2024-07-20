@@ -100,10 +100,10 @@ ingress-nginx:
   #   replicaCount: 3
 
 ingress:
-  enabled: false
+  enabled: true
   # Used to create an Ingress record.
   hosts:
-    - name: sonarqube.your-org.com
+    - name: sonarqube.k8s.local
       # Different clouds or configurations might need /* as the default path
       # path: /
       # For additional control over serviceName and servicePort
