@@ -1164,7 +1164,7 @@ agent:
             resourceRequestMemory: "300Mi"
             resourceLimitMemory: "512Mi"
 
-    docker: |
+    docker-agent: |
       - name: docker
         label: docker
         serviceAccount: jenkins

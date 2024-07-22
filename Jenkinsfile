@@ -1,5 +1,5 @@
 pipeline {
-    agent {kubernetes {label "python" && "docker"}}
+    agent {kubernetes {label "python && docker-agent"}}
     environment {
         // def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
         DIRECTORY = './jenkins-labs'
