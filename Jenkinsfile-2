@@ -1,0 +1,20 @@
+environment {
+    DIRECTORY = './jenkins-labs'
+    DOCKERHUB_CREDENTIALS = credentials('docker-hub-credential')
+    APP_NAME = "brianvo/flaskdemodevops"
+}
+
+node('devops-python') {
+    container('python') {
+        stage('Checkout') {
+            echo 'Code checkout.'
+            git branch: 'main', url: 'https://github.com/datvo2k/flask-demo-devops.git'
+        }
+
+        stage('Prepare') {
+            echo 'Installing required packages...'
+            sh 'pip3 install -r requirements.txt'
+        }
+    }
+
+}

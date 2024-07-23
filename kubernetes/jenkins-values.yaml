@@ -982,10 +982,10 @@ agent:
   # Configure the attributes as they appear in the corresponding Java class for that type
   # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes
   # -- Additional volumes
-  volumes: []
-  # - type: ConfigMap
-  #   configMapName: myconfigmap
-  #   mountPath: /var/myapp/myconfigmap
+  volumes:
+  - type: ConfigMap
+    configMapName: python
+    mountPath: /var/python/myconfigmap
   # - type: EmptyDir
   #   mountPath: /var/myapp/myemptydir
   #   memory: false
@@ -1133,9 +1133,9 @@ agent:
   # Best reference is https://<jenkins_url>/configuration-as-code/reference#Cloud-kubernetes. The example below creates a python pod template.
   # -- Configures extra pod templates for the default kubernetes cloud
   podTemplates:
-    python: |
-      - name: python
-        label: python
+    devops-python: |
+      - name: devops-python
+        label: devops-python
         serviceAccount: jenkins
         containers:
           - name: python
@@ -1149,11 +1149,6 @@ agent:
             resourceLimitCpu: "1"
             resourceLimitMemory: "2048Mi"
 
-    kubectl: |
-      - name: kubectl
-        label: kubectl
-        serviceAccount: jenkins
-        containers:
           - name: kubectl
             image: bitnami/kubectl:latest
             command: "cat"
@@ -1164,12 +1159,7 @@ agent:
             resourceRequestMemory: "300Mi"
             resourceLimitMemory: "512Mi"
 
-    docker-agent: |
-      - name: docker
-        label: docker
-        serviceAccount: jenkins
-        containers:
-          - name: docker
+          - name: docker-agent
             image: docker
             command: "cat"
             ttyEnabled: true

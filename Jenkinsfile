@@ -1,5 +1,5 @@
 pipeline {
-    agent {kubernetes {label "python && docker-agent"}}
+    agent none
     environment {
         // def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
         DIRECTORY = './jenkins-labs'
@@ -8,6 +8,10 @@ pipeline {
     }
     stages {
         stage('Checkout') {
+            agent {
+                label 'python'
+                reuseNode true
+            }
             steps {
                 container('python') {
                     echo 'Code checkout.'
@@ -17,61 +21,51 @@ pipeline {
         }
 
         stage('Prepare') {
+            agent {
+                label 'python'
+                reuseNode true
+            }
             steps {
                 container('python') {
                     echo 'Installing required packages...'
                     sh 'pip3 install -r requirements.txt'
-                    reuseNode true
                 }
             }
         }
 
         stage('Unit Tests') {
+            agent {
+                label 'python'
+                reuseNode true
+            }
             steps {
-                container('python') {
+                container('python'){
                     echo 'Running tests...'
                     sh 'nosetests -v test'
-                    reuseNode true
                 }
             }
         }
 
         stage('Integration tests') {
+            agent {
+                label 'python'
+                reuseNode true
+            }
             steps {
-                container('python') {
-                    echo 'Executing integration tests...'
-                    sh 'nosetests -v int_test'
-                    reuseNode true
-                }
+                echo 'Executing integration tests...'
+                sh 'nosetests -v int_test'
             }
         }
 
         stage('Build image') {
+            agent { 
+                label 'docker-agent' 
+            }
             steps {
-                container('python') {
-                    script { 
-                        withDockerRegistry(credentialsId: ${DOCKERHUB_CREDENTIALS}, toolName: 'docker') {
-                            sh 'dockerd & > /dev/null'
-                            sh "docker build  -t $APP_NAME:$BUILD_NUMBER ."
-                            reuseNode true
-                        }
-                    }
+                script { 
+                    dockerImage = docker.build APP_NAME + ":$BUILD_NUMBER"
                 }
             }
         }
-
-        // stage('SonarQube Code Analysis') {
-        //     steps {
-        //         container('python') {
-        //             script {
-        //                 withSonarQubeEnv('SonarQube-server') {
-        //                     def sonarqubeScannerHome = tool 'SonarQube-Scanner-1'
-        //                     sh "echo $pwd"
-        //                     sh "${sonarqubeScannerHome}/bin/sonar-scanner"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
