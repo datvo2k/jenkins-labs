@@ -1,7 +1,13 @@
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
+    'FAILURE': 'danger',
+]
+
 environment {
     DIRECTORY = './jenkins-labs'
     DOCKERHUB_CREDENTIALS = credentials('docker-hub-credential')
     APP_NAME = "brianvo/flaskdemodevops"
+    HOME = "${env.WORKSPACE}"
 }
 
 node('devops-python') {
@@ -15,6 +21,21 @@ node('devops-python') {
             echo 'Installing required packages...'
             sh 'pip3 install -r requirements.txt'
         }
+
+        stage('Unit Tests') {
+            echo 'Running tests...'
+            sh 'nosetests -v test'
+        }
+
+        stage('Integration tests') {
+            echo 'Executing integration tests...'
+            sh 'nosetests -v int_test'
+        }
     }
 
+    container('kaniko') {
+        stage('Build image') {
+            sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=${env.APP_NAME}:${env.BUILD_ID}"
+        }
+    }
 }

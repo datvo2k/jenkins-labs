@@ -206,7 +206,7 @@ controller:
     runAsUser: 1000
     runAsGroup: 1000
     readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
+    allowPrivilegeEscalation: true
 
   # For minikube, set this to NodePort, elsewhere uses LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
@@ -983,9 +983,9 @@ agent:
   # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes
   # -- Additional volumes
   volumes:
-  - type: ConfigMap
-    configMapName: python
-    mountPath: /var/python/myconfigmap
+  # - type: ConfigMap
+  #   configMapName: python
+  #   mountPath: /var/python/myconfigmap
   # - type: EmptyDir
   #   mountPath: /var/myapp/myemptydir
   #   memory: false
@@ -1159,15 +1159,16 @@ agent:
             resourceRequestMemory: "300Mi"
             resourceLimitMemory: "512Mi"
 
-          - name: docker-agent
-            image: docker
-            command: "cat"
+          - name: kaniko
+            image: gcr.io/kaniko-project/executor:v1.7.0-debug
+            imagePullPolicy: Always
+            command: "sh -c"
+            args: "cat"
             ttyEnabled: true
-            privileged: true
-            resourceRequestCpu: "100m"
-            resourceLimitCpu: '300m'
-            resourceRequestMemory: "300Mi"
-            resourceLimitMemory: "512Mi"
+            privileged: false
+            resourceRequestCpu: "400m"
+            resourceRequestMemory: "128Mi"
+            resourceLimitMemory: "1024Mi"
 
 # Inherits all values from `agent` so you only need to specify values which differ
 # -- Configure additional
