@@ -1161,14 +1161,13 @@ agent:
 
           - name: kaniko
             image: gcr.io/kaniko-project/executor:v1.7.0-debug
-            imagePullPolicy: Always
             command: "sh -c"
             args: "cat"
             ttyEnabled: true
             privileged: false
             resourceRequestCpu: "400m"
             resourceRequestMemory: "128Mi"
-            resourceLimitMemory: "1024Mi"
+            resourceLimitMemory: "512Mi"
 
 # Inherits all values from `agent` so you only need to specify values which differ
 # -- Configure additional

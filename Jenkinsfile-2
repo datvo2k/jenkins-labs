@@ -35,7 +35,9 @@ node('devops-python') {
 
     container('kaniko') {
         stage('Build image') {
-            sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=${env.APP_NAME}:${env.BUILD_ID}"
+            sh '''#!/busybox/sh
+                /kaniko/executor --context `pwd` --verbosity debug --destination brianvo/flaskdemodevops:latest
+            '''
         }
     }
 }
